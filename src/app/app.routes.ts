@@ -4,7 +4,7 @@ import { OthersComponent } from './others/others.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 export const routes: Routes = [
-    {path:"",component:HomeComponent,pathMatch:'full'},
+    {path:"transactions",component:HomeComponent},
     {path:"others",component:OthersComponent},
-    {path:"dashboard",component:DashboardComponent}
+    {path:"",component:DashboardComponent}
 ];

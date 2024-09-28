@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { DataStoreService } from '../services/data-store.service';
 import { ApiService } from '../services/api.service';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule,RouterLinkActive,RouterLink],
   templateUrl: './home.component.html',
   providers: [DatePipe],
   styleUrl: './home.component.css'
@@ -22,6 +23,7 @@ export class HomeComponent {
   isEditClicked: boolean = false;
   categoryList:any = [];
   isAddButtonDisabled:boolean = true;
+  openAddTransactionForm:boolean = false;
 
   constructor(public dataStore: DataStoreService, public datePipe: DatePipe, public apiService: ApiService) { }
 
