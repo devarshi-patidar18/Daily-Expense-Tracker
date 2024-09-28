@@ -133,11 +133,13 @@
 
             </div>
             <!-- <strong style="margin-left:17%">Category vs Expense Chart ({{selectedMonth}}) </strong> -->
-            <div class="col-12">
+            @if (categoryAndItemChartData.datasets[0].data.length!=0) {
+                <div class="col-12">
 
-                <p-chart type="bar" [data]="categoryChartData" [options]="categoryChartOptions" />
-
-            </div>
+                    <p-chart type="bar" [data]="categoryAndItemChartData" [options]="categoryOrItemChartOptions" />
+    
+                </div>
+            }
             }
             <!-- Categories Chart Ends -->
 
@@ -156,11 +158,13 @@
                 </div>
             </div>
             <!-- <strong style="margin-left:17%">Category Expense Chart</strong> -->
-            <div class="col-12">
+            @if (categoryAndItemChartData.datasets[0].data.length!=0) {
+                <div class="col-12">
 
-                <p-chart type="bar" [data]="categoryChartData" [options]="categoryChartOptions" />
-
-            </div>
+                    <p-chart type="bar" [data]="categoryAndItemChartData" [options]="categoryOrItemChartOptions" />
+    
+                </div>
+            }
             }
             <!-- Items Chart Ends -->
             }
