@@ -79,6 +79,7 @@
             <!------------- Row 1 -------------->
             <div class="col box-container">
                 <!-- Month Chart Button Starts -->
+
                 <div class="col-3 box">
                     <button type="submit" class="btn {{this.chartButton=='monthChart'?'btn-secondary':''}}"
                         style="border: 1px solid gray;" (click)="chartsAccordion('monthChart')">
@@ -88,6 +89,7 @@
                 <!-- Month Chart Button Ends -->
 
                 <!-- Categories Chart Button Starts -->
+
                 <div class="col-3 box">
                     <button type="submit" class="btn {{this.chartButton=='categoriesChart'?'btn-secondary':''}}"
                         style="border: 1px solid gray;" (click)="chartsAccordion('categoriesChart');categoryChartDetails(selectedMonth,'category')">
@@ -97,6 +99,7 @@
                 <!-- Categories Chart Button Ends -->
 
                 <!-- Items Chart Button Starts -->
+
                 <div class="col-3 box">
                     <button type="submit" class="btn {{this.chartButton=='itemsChart'?'btn-secondary':''}}"
                         style="border: 1px solid gray;" (click)="chartsAccordion('itemsChart');categoryChartDetails(selectedMonth,'item')">
@@ -105,6 +108,12 @@
                 </div>
                 <!-- Items Chart Button Ends -->
             </div>
+
+            <!------------- Row 2 -------------->
+            <!-- <div class="col-12" style="display: flex;justify-content: center;">
+
+
+            </div> -->
 
             <!-- Months Chart Starts -->
             @if (this.chartButton=='monthChart') {
