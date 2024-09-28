@@ -39,8 +39,8 @@ export class DashboardComponent {
     transactionsList: any = [];
     categoriesList: any = [];
     monthsList: any = [];
-    categoryChartData: any;
-    categoryChartOptions: any;
+    categoryAndItemChartData: any;
+    categoryOrItemChartOptions: any;
     monthChartData: any;
     monthChartOptions: any;
     isBarChart: boolean = false;
@@ -60,14 +60,14 @@ export class DashboardComponent {
         this.transactionsList = this.dataStore.transferLocalStorageDataToList("transactions");
         this.categoriesList = this.dataStore.transferLocalStorageDataToList("categories");
         // this.categoryChartDetails('Sep');
-        this.monthChartDetails(this.getMonthsFromLocalStorage());
-        this.monthsList = this.getMonthsFromLocalStorage();
+        this.monthChartDetails(this.getMonthDataFromLocalStorage());
+        this.monthsList = this.getMonthDataFromLocalStorage();
         // this.getCategoryDataFromLocalStorage()
         
     }
 
     /**Get Monthly Data from Local Storage */
-    getMonthsFromLocalStorage() {
+    getMonthDataFromLocalStorage() {
         let tempMonthList: any = [];
         let returnListValue: any = [];
         this.dataStore.transferLocalStorageDataToList("transactions").forEach((element: any) => {
@@ -99,7 +99,7 @@ export class DashboardComponent {
 
 
     /** Get monthly Category wise Expense and Income from local storage */
-    getCategoryDataFromLocalStorage(chartName:any) {
+    getCategoryDataFromLocalStorage(chartTpe:any) {
         const monthlyTotals: { [key: string]: ItemTotals } = {};
 
         this.dataStore.organiseByDate(this.dataStore.transferLocalStorageDataToList("transactions")).forEach((entry: any) => {
@@ -108,16 +108,14 @@ export class DashboardComponent {
             if (!monthlyTotals[monthName]) {
                 monthlyTotals[monthName] = {};
             }
-
-            console.log(entry)
             entry.transactions.forEach((transaction: any) => {
-                if(chartName=='category'){
+                if(chartTpe=='category'){
                     if (!monthlyTotals[monthName][transaction.itemCategoryId] && transaction.type=='debit') {
                         monthlyTotals[monthName][transaction.itemCategoryId] = 0;
                     }
                     monthlyTotals[monthName][transaction.itemCategoryId] += transaction.itemCost;
                 }
-                if(chartName=='item'){
+                if(chartTpe=='item'){
                     if (!monthlyTotals[monthName][transaction.itemName] && transaction.type=='debit') {
                         monthlyTotals[monthName][transaction.itemName] = 0;
                     }
@@ -179,19 +177,20 @@ export class DashboardComponent {
         let catData:any = [];
         this.getCategoryDataFromLocalStorage(chartType).forEach((data: any) => {
             if (data.month == selectedMonth) {
-                    catLabels = Object.keys(data.totals);
-                    catData = Object.values(data.totals);
+                    let tempTotals:any = data.totals;
+                    for (const key in tempTotals) {
+                        // Check if the value is NaN
+                        if (typeof tempTotals[key] === 'number' && isNaN(tempTotals[key] as number)) {
+                            delete tempTotals[key]; // Remove the key if the value is NaN
+                        }
+                    }
+                    catLabels = Object.keys(tempTotals);
+                    catData = Object.values(tempTotals);
             }
         })
 
-
-        // categoriesList.forEach((element: any) => {
-        //     catLabels.push(element.name);
-        // });
-        console.log(catLabels);
-        console.log(catData)
         // Category Chart Details Starts
-        this.categoryChartData = {
+        this.categoryAndItemChartData = {
             labels: catLabels,
             datasets: [
                 {
@@ -201,7 +200,7 @@ export class DashboardComponent {
             ]
         };
 
-        this.categoryChartOptions = {
+        this.categoryOrItemChartOptions = {
             indexAxis: 'y',
             maintainAspectRatio: false,
             aspectRatio: .6,
@@ -252,7 +251,7 @@ export class DashboardComponent {
         this.searchedResults = this.dataStore.organiseByDate(filteredList);
     }
 
-    showStatistics(){
+    showStatics(){
         this.isShowStatistics = !this.isShowStatistics;
     }
 

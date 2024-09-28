@@ -82,3 +82,26 @@ table {
 .red-td {
     background-color: rgb(200, 112, 112);
 }
+
+.box-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Allows wrapping for smaller screens */
+    
+    /* padding: 20px; */
+}
+
+.box {
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .box {
+        width: 33%; /* Make boxes wider on smaller screens */
+    }
+}

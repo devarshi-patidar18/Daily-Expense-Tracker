@@ -1,6 +1,6 @@
 <div class="parent-page-css ">
     <div class="container">
-        <div class="row justify-content-md-center g-3">
+        <div class="row justify-content-md-center g-3 col-12">
 
             <!------------------------------------------ Global Search Accordian Starts ------------------------------------------>
 
@@ -77,10 +77,11 @@
 
             @if (isChartOptions) {
             <!------------- Row 1 -------------->
-            <div class="col-12" style="display: flex;justify-content: center;">
+            <div class="col box-container">
                 <!-- Month Chart Button Starts -->
-                <div class="col-3">
-                    <button type="submit" class="btn {{this.chartButton=='monthly'?'btn-secondary':''}}"
+
+                <div class="col-3 box">
+                    <button type="submit" class="btn {{this.chartButton=='monthChart'?'btn-secondary':''}}"
                         style="border: 1px solid gray;" (click)="chartsAccordion('monthChart')">
                         Monthly
                     </button>
@@ -88,18 +89,20 @@
                 <!-- Month Chart Button Ends -->
 
                 <!-- Categories Chart Button Starts -->
-                <div class="col-3">
-                    <button type="submit" class="btn {{this.chartButton=='category'?'btn-secondary':''}}"
-                        style="border: 1px solid gray;" (click)="chartsAccordion('categoriesChart')">
+
+                <div class="col-3 box">
+                    <button type="submit" class="btn {{this.chartButton=='categoriesChart'?'btn-secondary':''}}"
+                        style="border: 1px solid gray;" (click)="chartsAccordion('categoriesChart');categoryChartDetails(selectedMonth,'category')">
                         Category
                     </button>
                 </div>
                 <!-- Categories Chart Button Ends -->
 
                 <!-- Items Chart Button Starts -->
-                <div class="col-3">
-                    <button type="submit" class="btn {{this.chartButton=='item'?'btn-secondary':''}}"
-                        style="border: 1px solid gray;" (click)="chartsAccordion('itemsChart')">
+
+                <div class="col-3 box">
+                    <button type="submit" class="btn {{this.chartButton=='itemsChart'?'btn-secondary':''}}"
+                        style="border: 1px solid gray;" (click)="chartsAccordion('itemsChart');categoryChartDetails(selectedMonth,'item')">
                         Item
                     </button>
                 </div>
@@ -138,12 +141,14 @@
                 <!-- Select Month Field Starts -->
 
             </div>
-            <strong style="margin-left:17%">Category vs Expense Chart ({{selectedMonth}}) </strong>
-            <div class="col-12">
+            <!-- <strong style="margin-left:17%">Category vs Expense Chart ({{selectedMonth}}) </strong> -->
+            @if (categoryAndItemChartData.datasets[0].data.length!=0) {
+                <div class="col-12">
 
-                <p-chart type="bar" [data]="categoryChartData" [options]="categoryChartOptions" />
-
-            </div>
+                    <p-chart type="bar" [data]="categoryAndItemChartData" [options]="categoryOrItemChartOptions" />
+    
+                </div>
+            }
             }
             <!-- Categories Chart Ends -->
 
@@ -161,21 +166,23 @@
                     </select>
                 </div>
             </div>
-            <strong style="margin-left:17%">Category Expense Chart</strong>
-            <div class="col-12">
+            <!-- <strong style="margin-left:17%">Category Expense Chart</strong> -->
+            @if (categoryAndItemChartData.datasets[0].data.length!=0) {
+                <div class="col-12">
 
-                <p-chart type="bar" [data]="categoryChartData" [options]="categoryChartOptions" />
-
-            </div>
+                    <p-chart type="bar" [data]="categoryAndItemChartData" [options]="categoryOrItemChartOptions" />
+    
+                </div>
+            }
             }
             <!-- Items Chart Ends -->
             }
             <!------------------------------------------ Charts Accordian Ends ------------------------------------------>
 
 
-            <!------------------------------------------ Statistics Accordian Starts ------------------------------------------>
-            <button type="submit" class="btn btn-primary" (click)="showStatistics()">
-                Statistics <i class="fa-solid fa-calculator"></i>
+            <!------------------------------------------ Statics Accordian Starts ------------------------------------------>
+            <button type="submit" class="btn btn-primary" (click)="showStatics()">
+                Statics <i class="fa-solid fa-calculator"></i>
             </button>
             @if (isShowStatistics) {
             <div class="col-12" style="display: flex;justify-content: center;">
@@ -192,22 +199,9 @@
                     </button>
                 </div>
             </div>
-            <div class="col-12" style="display: flex;justify-content: center;">
-                <div class="col-6">
-                    <button type="submit" class="btn {{this.chartButton=='monthly'?'btn-secondary':''}}"
-                        style="border: 1px solid gray;">
-                        Daily Average Expense this month: 290
-                    </button>
-                </div>
-                <div class="col-6">
-                    <button type="submit" class="btn {{this.chartButton=='category'?'btn-secondary':''}}"
-                        style="border: 1px solid gray;">
-                        Daily Average Expense: 190
-                    </button>
-                </div>
-            </div>
+            
             }
-            <!------------------------------------------ Statistics Accordian Ends ------------------------------------------>
+            <!------------------------------------------ Statics Accordian Ends ------------------------------------------>
 
 
             <!------------------------------------------ Payments AAccordian Starts ------------------------------------------>
