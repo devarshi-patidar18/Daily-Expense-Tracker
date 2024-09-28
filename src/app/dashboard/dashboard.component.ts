@@ -3,7 +3,7 @@ import { DataStoreService } from '../services/data-store.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { ChartModule } from 'primeng/chart';
 import { CookieService } from 'ngx-cookie-service';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../services/api.service';
 
@@ -29,7 +29,7 @@ type MonthlyTotal = {
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [ChartModule, FormsModule],
+    imports: [ChartModule, FormsModule,CommonModule],
     templateUrl: './dashboard.component.html',
     providers: [DatePipe],
     styleUrl: './dashboard.component.css'
@@ -44,7 +44,7 @@ export class DashboardComponent {
     monthChartData: any;
     monthChartOptions: any;
     isBarChart: boolean = false;
-    isApplyFilter: boolean = false;
+    showGlobalFilter: boolean = false;
     filterModule: any = {};
     isChartOpen: boolean = false;
     isLoadingSearchResult: boolean = false;
@@ -53,7 +53,11 @@ export class DashboardComponent {
     isMonthlyChart: boolean = false;
     chartButton: string = "";
     selectedMonth: any;
-    isShowStatistics:boolean = false;
+    isShowStatistics: boolean = false;
+    payments: any = [];
+    showPaymentsGrid: boolean = false;
+    totalPaid:number = 0;
+    totalUnpaid:number = 0;
     constructor(public dataStore: DataStoreService, public cookie: CookieService, public datePipe: DatePipe, public apiService: ApiService) { }
 
     ngOnInit() {
@@ -62,8 +66,7 @@ export class DashboardComponent {
         // this.categoryChartDetails('Sep');
         this.monthChartDetails(this.getMonthDataFromLocalStorage());
         this.monthsList = this.getMonthDataFromLocalStorage();
-        // this.getCategoryDataFromLocalStorage()
-        
+
     }
 
     /**Get Monthly Data from Local Storage */
@@ -78,7 +81,7 @@ export class DashboardComponent {
         tempList.forEach((e1: any) => {
             let totalExpenseOfTheMonth: number = 0;
             let totalIncomeOfTheMonth: number = 0;
-            this.dataStore.organiseByDate(this.dataStore.transferLocalStorageDataToList("transactions")).forEach((e2: any) => {
+            this.dataStore.organiseData(this.dataStore.transferLocalStorageDataToList("transactions"),'date').forEach((e2: any) => {
                 if (e1 == (this.datePipe.transform(e2.date, "MMM"))) {
                     totalExpenseOfTheMonth = totalExpenseOfTheMonth + e2?.totalExpenseOfTheDay;
                     totalIncomeOfTheMonth = totalIncomeOfTheMonth + e2?.totalIncomeOfTheDay;
@@ -99,24 +102,24 @@ export class DashboardComponent {
 
 
     /** Get monthly Category wise Expense and Income from local storage */
-    getCategoryDataFromLocalStorage(chartTpe:any) {
+    organiseTransactionByCatAndItem(chartType: any) {
         const monthlyTotals: { [key: string]: ItemTotals } = {};
 
-        this.dataStore.organiseByDate(this.dataStore.transferLocalStorageDataToList("transactions")).forEach((entry: any) => {
+        this.dataStore.organiseData(this.dataStore.transferLocalStorageDataToList("transactions"),'date').forEach((entry: any) => {
             const monthName: any = this.datePipe.transform(entry.date, "MMM");
 
             if (!monthlyTotals[monthName]) {
                 monthlyTotals[monthName] = {};
             }
             entry.transactions.forEach((transaction: any) => {
-                if(chartTpe=='category'){
-                    if (!monthlyTotals[monthName][transaction.itemCategoryId] && transaction.type=='debit') {
+                if (chartType == 'category' && transaction.type == 'debit') {
+                    if (!monthlyTotals[monthName][transaction.itemCategoryId]) {
                         monthlyTotals[monthName][transaction.itemCategoryId] = 0;
                     }
                     monthlyTotals[monthName][transaction.itemCategoryId] += transaction.itemCost;
                 }
-                if(chartTpe=='item'){
-                    if (!monthlyTotals[monthName][transaction.itemName] && transaction.type=='debit') {
+                if (chartType == 'item' && transaction.type == 'debit') {
+                    if (!monthlyTotals[monthName][transaction.itemName]) {
                         monthlyTotals[monthName][transaction.itemName] = 0;
                     }
                     monthlyTotals[monthName][transaction.itemName] += transaction.itemCost;
@@ -172,20 +175,20 @@ export class DashboardComponent {
     }
 
     /** Category Chart List data process method */
-    categoryChartDetails(selectedMonth: any,chartType:any) {
+    categoryChartDetails(selectedMonth: any, chartType: any) {
         let catLabels: any = [];
-        let catData:any = [];
-        this.getCategoryDataFromLocalStorage(chartType).forEach((data: any) => {
+        let catData: any = [];
+        this.organiseTransactionByCatAndItem(chartType).forEach((data: any) => {
             if (data.month == selectedMonth) {
-                    let tempTotals:any = data.totals;
-                    for (const key in tempTotals) {
-                        // Check if the value is NaN
-                        if (typeof tempTotals[key] === 'number' && isNaN(tempTotals[key] as number)) {
-                            delete tempTotals[key]; // Remove the key if the value is NaN
-                        }
+                let tempTotals: any = data.totals;
+                for (const key in tempTotals) {
+                    // Check if the value is NaN
+                    if (typeof tempTotals[key] === 'number' && isNaN(tempTotals[key] as number)) {
+                        delete tempTotals[key]; // Remove the key if the value is NaN
                     }
-                    catLabels = Object.keys(tempTotals);
-                    catData = Object.values(tempTotals);
+                }
+                catLabels = Object.keys(tempTotals);
+                catData = Object.values(tempTotals);
             }
         })
 
@@ -194,7 +197,7 @@ export class DashboardComponent {
             labels: catLabels,
             datasets: [
                 {
-                    label: 'Expense on the Category in '+ selectedMonth,
+                    label: 'Expense on the Category in ' + selectedMonth,
                     data: catData
                 }
             ]
@@ -208,7 +211,7 @@ export class DashboardComponent {
     }
 
     chartsAccordion(value: any) {
-        this.isApplyFilter = false;
+        this.showGlobalFilter = false;
         if (value == "") {
 
             this.isChartOptions = !this.isChartOptions;
@@ -230,7 +233,7 @@ export class DashboardComponent {
 
     globalSearchButtonClicked() {
         this.isChartOptions = false;
-        this.isApplyFilter = !this.isApplyFilter;
+        this.showGlobalFilter = !this.showGlobalFilter;
     }
 
     searchFilter(event: any) {
@@ -248,11 +251,27 @@ export class DashboardComponent {
                     return data;
                 }
             }))
-        this.searchedResults = this.dataStore.organiseByDate(filteredList);
+        this.searchedResults = this.dataStore.organiseData(filteredList,'date');
     }
 
-    showStatics(){
+    showStatics() {
         this.isShowStatistics = !this.isShowStatistics;
+    }
+
+    getPaymentDetails() {
+        this.totalPaid=0;
+        this.totalUnpaid=0;
+        let tempList: any = [];
+
+        this.dataStore.transferLocalStorageDataToList("transactions").forEach((transaction: any) => {
+            if (transaction.type == 'borrow' || transaction.type == 'tolend') {tempList.push(transaction);}
+        });
+
+        this.payments = this.dataStore.organiseData(tempList,'itemName');
+        this.payments.forEach((payment:any) => {
+            this.totalPaid = this.totalPaid + payment.totalLended;
+            this.totalUnpaid = this.totalUnpaid + payment.totalBorrowed;
+        });
     }
 
 }

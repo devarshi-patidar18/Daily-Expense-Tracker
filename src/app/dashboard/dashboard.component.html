@@ -4,11 +4,11 @@
 
             <!------------------------------------------ Global Search Accordian Starts ------------------------------------------>
 
-            <button type="submit" class="btn btn-primary" (click)="globalSearchButtonClicked()">
+            <button type="submit" class="btn btn-primary" (click)="globalSearchButtonClicked();isChartOptions=false;isShowStatistics=false;showPaymentsGrid=false">
                 Global Search <i class="fa-solid fa-search"></i>
             </button>
 
-            @if(isApplyFilter){
+            @if(showGlobalFilter){
 
             <!-- Search filter Input field -->
             <div class="col-12">
@@ -31,7 +31,7 @@
                 @for (d of this.searchedResults; track $index) {
                 <div style="margin-top: 15px;">
                     <div>
-                        <strong>{{this.datePipe.transform(d.date,"YYYY-MMM-dd")}} &nbsp;</strong>
+                        <strong>{{this.datePipe.transform(d.date,"dd-MMM-yyyy")}} &nbsp;</strong>
                     </div>
                     <div>
                         <strong>Expense:
@@ -71,7 +71,7 @@
 
 
             <!------------------------------------------ Charts Accordian Starts ------------------------------------------>
-            <button type="submit" class="btn btn-primary" (click)="chartsAccordion('')">
+            <button type="submit" class="btn btn-primary" (click)="chartsAccordion('');showPaymentsGrid=false;showGlobalFilter=false;isShowStatistics=false">
                 Charts <i class="fa-solid fa-chart-column"></i>
             </button>
 
@@ -92,7 +92,8 @@
 
                 <div class="col-3 box">
                     <button type="submit" class="btn {{this.chartButton=='categoriesChart'?'btn-secondary':''}}"
-                        style="border: 1px solid gray;" (click)="chartsAccordion('categoriesChart');categoryChartDetails(selectedMonth,'category')">
+                        style="border: 1px solid gray;"
+                        (click)="chartsAccordion('categoriesChart');categoryChartDetails(selectedMonth,'category')">
                         Category
                     </button>
                 </div>
@@ -102,7 +103,8 @@
 
                 <div class="col-3 box">
                     <button type="submit" class="btn {{this.chartButton=='itemsChart'?'btn-secondary':''}}"
-                        style="border: 1px solid gray;" (click)="chartsAccordion('itemsChart');categoryChartDetails(selectedMonth,'item')">
+                        style="border: 1px solid gray;"
+                        (click)="chartsAccordion('itemsChart');categoryChartDetails(selectedMonth,'item')">
                         Item
                     </button>
                 </div>
@@ -143,11 +145,11 @@
             </div>
             <!-- <strong style="margin-left:17%">Category vs Expense Chart ({{selectedMonth}}) </strong> -->
             @if (categoryAndItemChartData.datasets[0].data.length!=0) {
-                <div class="col-12">
+            <div class="col-12">
 
-                    <p-chart type="bar" [data]="categoryAndItemChartData" [options]="categoryOrItemChartOptions" />
-    
-                </div>
+                <p-chart type="bar" [data]="categoryAndItemChartData" [options]="categoryOrItemChartOptions" />
+
+            </div>
             }
             }
             <!-- Categories Chart Ends -->
@@ -168,11 +170,11 @@
             </div>
             <!-- <strong style="margin-left:17%">Category Expense Chart</strong> -->
             @if (categoryAndItemChartData.datasets[0].data.length!=0) {
-                <div class="col-12">
+            <div class="col-12">
 
-                    <p-chart type="bar" [data]="categoryAndItemChartData" [options]="categoryOrItemChartOptions" />
-    
-                </div>
+                <p-chart type="bar" [data]="categoryAndItemChartData" [options]="categoryOrItemChartOptions" />
+
+            </div>
             }
             }
             <!-- Items Chart Ends -->
@@ -181,7 +183,7 @@
 
 
             <!------------------------------------------ Statics Accordian Starts ------------------------------------------>
-            <button type="submit" class="btn btn-primary" (click)="showStatics()">
+            <button type="submit" class="btn btn-primary" (click)="showStatics();showPaymentsGrid=false;isChartOptions=false;showGlobalFilter=false">
                 Statics <i class="fa-solid fa-calculator"></i>
             </button>
             @if (isShowStatistics) {
@@ -199,15 +201,59 @@
                     </button>
                 </div>
             </div>
-            
+
             }
             <!------------------------------------------ Statics Accordian Ends ------------------------------------------>
 
 
             <!------------------------------------------ Payments AAccordian Starts ------------------------------------------>
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary" (click)="getPaymentDetails();this.showPaymentsGrid=!this.showPaymentsGrid;showGlobalFilter=false;isShowStatistics=false;isChartOptions=false">
                 Payments <i class="fa-solid fa-indian-rupee"></i>
             </button>
+
+            @if (showPaymentsGrid) {
+                <div>
+                    <strong>
+                        Total Paid: {{totalPaid}} &nbsp;&nbsp; Total Unpaid: {{totalUnpaid}} 
+                    </strong>
+                </div>
+                <!-- Payment Grid starts -->
+            @for (d of this.payments; track $index) {
+                <div style="">
+                    <div>
+                        <strong>{{d.itemName}} &nbsp;</strong>
+                    </div>
+                    <div>
+                        <strong>Paid:
+                            &nbsp;{{d.totalLended}} &nbsp;&nbsp;&nbsp;Unpaid
+                            {{d.totalBorrowed}}</strong>
+                    </div>
+                </div>
+                <table class="item-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Category</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (i of d.transactions; track $index) {
+    
+                        @if (i.itemName!='' && i.itemName!=null) {
+    
+                        <tr [ngClass]="i.type=='tolend'?'green-td':i.type=='borrow'?'red-td':''">
+                            <td>{{i.itemCategoryId}}</td>
+                            <td>{{i.itemCost}}</td>
+                            <td>{{this.datePipe.transform(i.date,'d/M/yy')}}</td>
+                        </tr>
+                        }
+                        }
+                    </tbody>
+                </table>
+                }
+                <!-- Payment Grid Ends -->
+            }
 
             <!------------------------------------------ Payments AAccordian Ends ------------------------------------------>
 

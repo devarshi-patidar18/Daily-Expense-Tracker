@@ -1,7 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CookieService } from 'ngx-cookie-service';
 import { DataStoreService } from '../services/data-store.service';
 import { ApiService } from '../services/api.service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -30,18 +29,18 @@ export class HomeComponent {
   ngOnInit() {
 
     this.transactionModule.type = "debit";
-    this.transactionModule.date = this.datePipe.transform(new Date(), "YYYY-MM-dd");
+    this.transactionModule.date = this.datePipe.transform(new Date(), "yyyy-MM-dd");
     this.transactionModule.selectedCategory = 'Select Item Category';
 
     this.transactionDataList = this.dataStore.transferLocalStorageDataToList("transactions");
 
     // Date filtered list
-    this.filteredList = this.dataStore.organiseByDate(this.transactionDataList);
+    this.filteredList = this.dataStore.organiseData(this.transactionDataList,'date');
 
     // Item Categories
     this.categoryList = this.dataStore.transferLocalStorageDataToList("categories");
     // console.log(this.categoryList);
-    console.log(this.transactionDataList);
+    console.log(this.filteredList);
 
     // this.transactionModule.selectedCategory = 'Gulab Mukati Milk';
 
@@ -75,7 +74,7 @@ export class HomeComponent {
       this.transactionModule.type = "debit";
       this.transactionModule.date = this.datePipe.transform(new Date(), "YYYY-MM-dd");
       this.transactionDataList = this.dataStore.transferLocalStorageDataToList("transactions");
-      this.filteredList = this.dataStore.organiseByDate(this.transactionDataList);
+      this.filteredList = this.dataStore.organiseData(this.transactionDataList,'date');
 
       this.isEditClicked = false;
       this.isAddButtonDisabled = true;
@@ -103,7 +102,7 @@ export class HomeComponent {
       // check wheather latestavailable id's data is inserted or not | and transfer data from storage to list
       // if (this.cookie.check(latestIdAvailable)) {
       this.transactionDataList = this.dataStore.transferLocalStorageDataToList("transactions");
-      this.filteredList = this.dataStore.organiseByDate(this.transactionDataList);
+      this.filteredList = this.dataStore.organiseData(this.transactionDataList,'date');
       console.log()
       // }
       // console.log(this.filteredList)
@@ -122,7 +121,7 @@ export class HomeComponent {
     // this.apiService.deleteItemFromLocal(deleteId);
     
     //   this.transactionDataList = this.dataStore.transferLocalStorageDataToList();
-    //   this.filteredList = this.dataStore.organiseByDate(this.transactionDataList);
+    //   this.filteredList = this.dataStore.organiseData(this.transactionDataList);
     
     // };
     // alert("Delete Feature is not yet implemented!")
@@ -144,13 +143,14 @@ export class HomeComponent {
     this.transactionModule.type = "debit";
     this.transactionModule.date = this.datePipe.transform(new Date(), "YYYY-MM-dd");
     this.transactionDataList = this.dataStore.transferLocalStorageDataToList("transactions");
-    this.filteredList = this.dataStore.organiseByDate(this.transactionDataList);
+    this.filteredList = this.dataStore.organiseData(this.transactionDataList,'date');
   }
 
   desableAddButton(){
     console.log(this.transactionModule.selectedCategory!='Select Item Category');
-    if(this.transactionModule.itemName!='' && this.transactionModule.itemName!==null && this.transactionModule.itemCost!='' && this.transactionModule.itemCost!==null &&
-      this.transactionModule.itemName!= undefined && this.transactionModule.itemCost!= undefined && this.transactionModule.selectedCategory!='Select Item Category'
+    if(this.transactionModule.itemName!='' && this.transactionModule.itemName!==null && this.transactionModule.itemName!= undefined
+        && this.transactionModule.itemCost!='' && this.transactionModule.itemCost!==null && this.transactionModule.itemCost!= undefined 
+        && this.transactionModule.selectedCategory!='Select Item Category' 
     ){
       this.isAddButtonDisabled = false;
     }
