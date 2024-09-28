@@ -1,6 +1,6 @@
 <div class="parent-page-css ">
     <div class="container">
-        <div class="row justify-content-md-center g-3">
+        <div class="row justify-content-md-center g-3 col-12">
 
             <!------------------------------------------ Global Search Accordian Starts ------------------------------------------>
 
@@ -77,10 +77,10 @@
 
             @if (isChartOptions) {
             <!------------- Row 1 -------------->
-            <div class="col-12" style="display: flex;justify-content: center;">
+            <div class="col box-container">
                 <!-- Month Chart Button Starts -->
-                <div class="col-4">
-                    <button type="submit" class="btn {{this.chartButton=='monthly'?'btn-secondary':''}}"
+                <div class="col-3 box">
+                    <button type="submit" class="btn {{this.chartButton=='monthChart'?'btn-secondary':''}}"
                         style="border: 1px solid gray;" (click)="chartsAccordion('monthChart')">
                         Monthly
                     </button>
@@ -88,22 +88,18 @@
                 <!-- Month Chart Button Ends -->
 
                 <!-- Categories Chart Button Starts -->
-                <div class="col-4">
-                    <button type="submit" class="btn {{this.chartButton=='category'?'btn-secondary':''}}"
-                        style="border: 1px solid gray;" (click)="chartsAccordion('categoriesChart')">
+                <div class="col-3 box">
+                    <button type="submit" class="btn {{this.chartButton=='categoriesChart'?'btn-secondary':''}}"
+                        style="border: 1px solid gray;" (click)="chartsAccordion('categoriesChart');categoryChartDetails(selectedMonth,'category')">
                         Category
                     </button>
                 </div>
                 <!-- Categories Chart Button Ends -->
-            </div>
-
-            <!------------- Row 2 -------------->
-            <div class="col-12" style="display: flex;justify-content: center;">
 
                 <!-- Items Chart Button Starts -->
-                <div class="col-4">
-                    <button type="submit" class="btn {{this.chartButton=='item'?'btn-secondary':''}}"
-                        style="border: 1px solid gray;" (click)="chartsAccordion('itemsChart')">
+                <div class="col-3 box">
+                    <button type="submit" class="btn {{this.chartButton=='itemsChart'?'btn-secondary':''}}"
+                        style="border: 1px solid gray;" (click)="chartsAccordion('itemsChart');categoryChartDetails(selectedMonth,'item')">
                         Item
                     </button>
                 </div>
@@ -136,7 +132,7 @@
                 <!-- Select Month Field Starts -->
 
             </div>
-            <strong style="margin-left:17%">Category vs Expense Chart ({{selectedMonth}}) </strong>
+            <!-- <strong style="margin-left:17%">Category vs Expense Chart ({{selectedMonth}}) </strong> -->
             <div class="col-12">
 
                 <p-chart type="bar" [data]="categoryChartData" [options]="categoryChartOptions" />
@@ -159,7 +155,7 @@
                     </select>
                 </div>
             </div>
-            <strong style="margin-left:17%">Category Expense Chart</strong>
+            <!-- <strong style="margin-left:17%">Category Expense Chart</strong> -->
             <div class="col-12">
 
                 <p-chart type="bar" [data]="categoryChartData" [options]="categoryChartOptions" />

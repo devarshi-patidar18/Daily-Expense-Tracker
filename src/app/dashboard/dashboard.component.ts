@@ -99,7 +99,7 @@ export class DashboardComponent {
 
 
     /** Get monthly Category wise Expense and Income from local storage */
-    getCategoryDataFromLocalStorage(chartName:any) {
+    getCategoryDataFromLocalStorage(chartTpe:any) {
         const monthlyTotals: { [key: string]: ItemTotals } = {};
 
         this.dataStore.organiseByDate(this.dataStore.transferLocalStorageDataToList("transactions")).forEach((entry: any) => {
@@ -111,13 +111,13 @@ export class DashboardComponent {
 
             console.log(entry)
             entry.transactions.forEach((transaction: any) => {
-                if(chartName=='category'){
+                if(chartTpe=='category'){
                     if (!monthlyTotals[monthName][transaction.itemCategoryId] && transaction.type=='debit') {
                         monthlyTotals[monthName][transaction.itemCategoryId] = 0;
                     }
                     monthlyTotals[monthName][transaction.itemCategoryId] += transaction.itemCost;
                 }
-                if(chartName=='item'){
+                if(chartTpe=='item'){
                     if (!monthlyTotals[monthName][transaction.itemName] && transaction.type=='debit') {
                         monthlyTotals[monthName][transaction.itemName] = 0;
                     }
