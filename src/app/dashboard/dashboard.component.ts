@@ -251,7 +251,7 @@ export class DashboardComponent {
         this.searchedResults = this.dataStore.organiseByDate(filteredList);
     }
 
-    showStatistics(){
+    showStatics(){
         this.isShowStatistics = !this.isShowStatistics;
     }
 
