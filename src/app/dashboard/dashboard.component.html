@@ -1,0 +1,224 @@
+<div class="parent-page-css ">
+    <div class="container">
+        <div class="row justify-content-md-center g-3">
+
+            <!------------------------------------------ Global Search Accordian Starts ------------------------------------------>
+
+            <button type="submit" class="btn btn-primary" (click)="globalSearchButtonClicked()">
+                Global Search <i class="fa-solid fa-search"></i>
+            </button>
+
+            @if(isApplyFilter){
+
+            <!-- Search filter Input field -->
+            <div class="col-12">
+                <!-- Input Field Starts -->
+                <div class="input-group">
+                    <input [(ngModel)]="filterModule.searchText" class="form-control" type="text" id="inlineFormValue"
+                        placeholder="Search by item name/Category" (keyup)="searchFilter($event)">
+                </div>
+                <!-- Input Field Ends -->
+
+                <!-- Global Search Loader Starts -->
+                @if (isLoadingSearchResult) {
+                <div>
+                    <i class="fa-solid fa-ellipsis fa-beat fa-xl" style="margin: 20px auto auto 45%;"></i>
+                </div>
+                }
+                <!-- Global Search Loader Ends -->
+
+                <!-- Global Search results Grid starts -->
+                @for (d of this.searchedResults; track $index) {
+                <div style="margin-top: 15px;">
+                    <div>
+                        <strong>{{this.datePipe.transform(d.date,"YYYY-MMM-dd")}} &nbsp;</strong>
+                    </div>
+                    <div>
+                        <strong>Expense:
+                            &nbsp;{{d.totalExpenseOfTheDay}} &nbsp;&nbsp;&nbsp;Income:
+                            {{d.totalIncomeOfTheDay}}</strong>
+                    </div>
+                </div>
+                <table class="item-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Item Name</th>
+                            <th scope="col">Cost</th>
+                            <th scope="col">Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (i of d.transactions; track $index) {
+
+                        @if (i.itemName!='' && i.itemName!=null) {
+
+                        <tr>
+                            <td>{{i.itemName}}</td>
+                            <td>{{i.itemCost}}</td>
+                            <td>{{i.itemCategoryId}}</td>
+                        </tr>
+                        }
+                        }
+                    </tbody>
+                </table>
+                }
+                <!-- Global Search results Grid Ends -->
+
+            </div>
+            }
+            <!------------------------------------------ Global Search Accordian Ends ------------------------------------------>
+
+
+
+            <!------------------------------------------ Charts Accordian Starts ------------------------------------------>
+            <button type="submit" class="btn btn-primary" (click)="chartsAccordion('')">
+                Charts <i class="fa-solid fa-chart-column"></i>
+            </button>
+
+            @if (isChartOptions) {
+            <!------------- Row 1 -------------->
+            <div class="col-12" style="display: flex;justify-content: center;">
+                <!-- Month Chart Button Starts -->
+                <div class="col-4">
+                    <button type="submit" class="btn {{this.chartButton=='monthly'?'btn-secondary':''}}"
+                        style="border: 1px solid gray;" (click)="chartsAccordion('monthChart')">
+                        Monthly
+                    </button>
+                </div>
+                <!-- Month Chart Button Ends -->
+
+                <!-- Categories Chart Button Starts -->
+                <div class="col-4">
+                    <button type="submit" class="btn {{this.chartButton=='category'?'btn-secondary':''}}"
+                        style="border: 1px solid gray;" (click)="chartsAccordion('categoriesChart')">
+                        Category
+                    </button>
+                </div>
+                <!-- Categories Chart Button Ends -->
+            </div>
+
+            <!------------- Row 2 -------------->
+            <div class="col-12" style="display: flex;justify-content: center;">
+
+                <!-- Items Chart Button Starts -->
+                <div class="col-4">
+                    <button type="submit" class="btn {{this.chartButton=='item'?'btn-secondary':''}}"
+                        style="border: 1px solid gray;" (click)="chartsAccordion('itemsChart')">
+                        Item
+                    </button>
+                </div>
+                <!-- Items Chart Button Ends -->
+            </div>
+
+            <!-- Months Chart Starts -->
+            @if (this.chartButton=='monthChart') {
+            <div class="col-12">
+                <p-chart type="bar" [data]="monthChartData" [options]="monthChartOptions" />
+            </div>
+            }
+            <!-- Months Chart Ends -->
+
+            <!-- Categories Chart Starts -->
+            @if (this.chartButton=='categoriesChart') {
+            <div class="col-12" style="justify-content: center;display: flex;">
+
+                <!-- Select Month Field Starts -->
+                <div class="col-8">
+                    <h6 style="margin-left: 25%;">Select Month</h6>
+                    <select class="form-select" id="inlineFormSelectPref" [(ngModel)]="selectedMonth"
+                        (change)="categoryChartDetails(selectedMonth,'category')">
+                        @for (item of monthsList; track $index) {
+                        <option value="{{item.monthName}}">{{item.monthName}}</option>
+                        }
+
+                    </select>
+                </div>
+                <!-- Select Month Field Starts -->
+
+            </div>
+            <strong style="margin-left:17%">Category vs Expense Chart ({{selectedMonth}}) </strong>
+            <div class="col-12">
+
+                <p-chart type="bar" [data]="categoryChartData" [options]="categoryChartOptions" />
+
+            </div>
+            }
+            <!-- Categories Chart Ends -->
+
+            <!-- Items Chart Starts -->
+            @if (this.chartButton=='itemsChart') {
+            <div class="col-12" style="justify-content: center;display: flex;">
+                <div class="col-8">
+                    <h6 style="margin-left: 25%;">Select Month</h6>
+                    <select class="form-select" id="inlineFormSelectPref" [(ngModel)]="selectedMonth"
+                        (change)="categoryChartDetails(selectedMonth,'item')">
+                        @for (item of monthsList; track $index) {
+                        <option value="{{item.monthName}}">{{item.monthName}}</option>
+                        }
+
+                    </select>
+                </div>
+            </div>
+            <strong style="margin-left:17%">Category Expense Chart</strong>
+            <div class="col-12">
+
+                <p-chart type="bar" [data]="categoryChartData" [options]="categoryChartOptions" />
+
+            </div>
+            }
+            <!-- Items Chart Ends -->
+            }
+            <!------------------------------------------ Charts Accordian Ends ------------------------------------------>
+
+
+            <!------------------------------------------ Statistics Accordian Starts ------------------------------------------>
+            <button type="submit" class="btn btn-primary" (click)="showStatistics()">
+                Statistics <i class="fa-solid fa-calculator"></i>
+            </button>
+            @if (isShowStatistics) {
+            <div class="col-12" style="display: flex;justify-content: center;">
+                <div class="col-6">
+                    <button type="submit" class="btn {{this.chartButton=='monthly'?'btn-secondary':''}} m-1"
+                        style="border: 1px solid gray;">
+                        Daily Average Expense: <br>190
+                    </button>
+                </div>
+                <div class="col-6">
+                    <button type="submit" class="btn {{this.chartButton=='category'?'btn-secondary':''}} m-1"
+                        style="border: 1px solid gray;">
+                        Monthly Average Expense: 20000
+                    </button>
+                </div>
+            </div>
+            <div class="col-12" style="display: flex;justify-content: center;">
+                <div class="col-6">
+                    <button type="submit" class="btn {{this.chartButton=='monthly'?'btn-secondary':''}}"
+                        style="border: 1px solid gray;">
+                        Daily Average Expense this month: 290
+                    </button>
+                </div>
+                <div class="col-6">
+                    <button type="submit" class="btn {{this.chartButton=='category'?'btn-secondary':''}}"
+                        style="border: 1px solid gray;">
+                        Daily Average Expense: 190
+                    </button>
+                </div>
+            </div>
+            }
+            <!------------------------------------------ Statistics Accordian Ends ------------------------------------------>
+
+
+            <!------------------------------------------ Payments AAccordian Starts ------------------------------------------>
+            <button type="submit" class="btn btn-primary">
+                Payments <i class="fa-solid fa-indian-rupee"></i>
+            </button>
+
+            <!------------------------------------------ Payments AAccordian Ends ------------------------------------------>
+
+        </div>
+    </div>
+
+
+
+
+</div>

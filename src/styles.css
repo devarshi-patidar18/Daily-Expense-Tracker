@@ -1,0 +1,84 @@
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+
+/* You can add global styles to this file, and also import other style files */
+.parent-page-css {
+    margin: 20px;
+}
+
+/* Reset default styles */
+body,
+table {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Basic styling for the table */
+.item-table {
+    margin-top: 10px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.item-table th,
+.item-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+/* Styling for the header */
+.item-table th {
+    background-color: #E0F7FA;
+    font-weight: bold;
+}
+
+/* Define fixed column widths */
+.item-table th:nth-child(1),
+.item-table td:nth-child(1) {
+    width: 60%;
+    /* Fixed width for the Item Name column */
+}
+
+.item-table th:nth-child(2),
+.item-table td:nth-child(2) {
+    width: 20%;
+    /* Medium width for the Item Cost column */
+}
+
+.item-table th:nth-child(3),
+.item-table td:nth-child(3) {
+    width: 10%;
+    /* Smaller width for the Actions column */
+}
+
+.item-table th:nth-child(4),
+.item-table td:nth-child(4) {
+    width: 10%;
+    /* Smaller width for the Actions column */
+}
+
+/* Handle text overflow in the Item Name column */
+.item-table td:nth-child(1) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Optional: Styling for action buttons */
+.item-table button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.green-td {
+    background-color: rgb(146, 226, 146);
+}
+
+.red-td {
+    background-color: rgb(200, 112, 112);
+}

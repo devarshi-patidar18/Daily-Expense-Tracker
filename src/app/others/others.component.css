@@ -1,0 +1,10 @@
+.categoryDiv{
+    max-height: 200px;
+    overflow-y: scroll;
+}
+
+.item-table th:nth-child(2),
+.item-table td:nth-child(2) {
+    width: 10% !important;
+    /* Medium width for the Item Cost column */
+}
