@@ -1,0 +1,53 @@
+Debit -> itemName -> itemCategory(any) -> cost ->
+    1. show in transactions only
+    2. will be counted as expense
+
+Credit -> itemName -> itemCategory(any) -> cost ->
+    1. show in transactions only
+    2. will add in income
+
+############################################################################################### in progress
+Taken (Borrow) -> name -> itemCategory(cash) -> cost
+    1. show in transactions in white colour
+    2. show in payments in red colour
+    3. Do not add in totalExpense
+    4. Add in totalUnpaid
+
+Taken (Borrow) -> name -> itemCategory(any item) -> cost
+    1. show in transactions in red colour (DONE)
+    2. show in payments in red colour 
+    3. Do not add in totalExpense
+    4. Add in totalUnpaid
+
+# If Borrowed from someone and paying back
+Given (tolend) -> name -> itemCategory(Paying Back) -> cost ->
+    1. show in transactions in white colour
+    2. show in payments in green colour
+    3. Do not add in totalExpense or totalIncome
+    4. Add in totalPaid
+
+# Paying for items dues
+Given (tolend) -> name -> itemCategory(Paying Dues) -> cost ->
+    1. show in transactions in white colour
+    2. show in payments in green colour
+    3. Add in totalExpense
+    4. Add in totalPaid
+
+# Lending someone
+Given (tolend) -> name -> itemCategory(To Lend) -> cost ->
+    1. show in transactions in white colour
+    2. show in payments in green colour
+    3. Add in totalExpense
+    4. Add in totalPaid
+
+
+
+
+
+
+#################### Planned Tasks ########################
+1. itemName to be replaced by transactionName
+2. progress bar for expected expense of the month in home screen
+3. edit of category -> 
+4. Trim Item name and category and convert to Capitalize hello -> Hello
+5. Autocomplete in item name to suggest already present items

@@ -2,6 +2,15 @@
     <div class="container">
         <div class="row justify-content-md-center g-3 col-12">
 
+            <!--------------------------------------------- Progress Bar ------------------------------------------------------->
+            <strong style="margin-top: 10px;">{{this.monthsList[0]!=null && this.monthsList[0]!=undefined ?this.dataStore.convertMonth(this.monthsList[0].monthName):'This Month'}}</strong>
+            <div class="progress-container">
+                
+                <div class="progress-bar" id="progressBar" [style.width]="this.progress + '%'" [ngClass]="this.progress<75?'bg-green':'bg-red'">{{this.progress}}%</div>
+            </div>
+        
+            <!-- <button (click)="updateProgress()">Increase Progress</button> -->
+
             <!------------------------------------------ Global Search Accordian Starts ------------------------------------------>
 
             <button type="submit" class="btn btn-primary" (click)="globalSearchButtonClicked();isChartOptions=false;isShowStatistics=false;showPaymentsGrid=false">
