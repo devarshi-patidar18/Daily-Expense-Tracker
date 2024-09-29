@@ -14,23 +14,23 @@
                 <!-- Transaction type Debit/Credit  -->
                 <div class="col-12">
                     <strong style="margin-right: 5px;">Transaction Type</strong><br>
-                    <input class="form-check-input" type="radio" name="options" value="debit" (click)="setCategoryList('debit')"
+                    <input class="form-check-input" type="radio" name="options" value="debit"
                         [(ngModel)]="transactionModule.type" style="margin-right: 2px;" />
                     <label style="margin-right: 7px;"> Debit
                     </label>
 
 
-                    <input class="form-check-input" type="radio" name="options" value="credit" (click)="setCategoryList('credit')"
+                    <input class="form-check-input" type="radio" name="options" value="credit"
                         [(ngModel)]="transactionModule.type" style="margin-right: 2px;" />
                     <label style="margin-right: 7px;"> Credit
                     </label>
 
-                    <input class="form-check-input" type="radio" name="options" value="borrow" (click)="setCategoryList('borrow')"
+                    <input class="form-check-input" type="radio" name="options" value="borrow"
                         [(ngModel)]="transactionModule.type" style="margin-right: 2px;" />
                     <label style="margin-right: 7px;"> Taken
                     </label>
 
-                    <input class="form-check-input" type="radio" name="options" value="tolend" (click)="setCategoryList('tolend')"
+                    <input class="form-check-input" type="radio" name="options" value="tolend"
                         [(ngModel)]="transactionModule.type" style="margin-right: 2px;" />
                     <label style="margin-right: 4px;"> Given
                     </label>
@@ -51,12 +51,13 @@
                 <div class="col-12">
                     <strong>Item Name</strong>
                     <div class="input-group">
-                        <input (keyup)="desableAddButton()" type="search" class="form-control"
+                        <input (keyup)="desableAddButton()" type="text" class="form-control"
                             id="inlineFormInputGroupUsername" [(ngModel)]="transactionModule.itemName"
                             placeholder="Item Name">
                     </div>
                 </div>
                 <!-- Item Category -->
+                @if (transactionModule.type!='borrow' && transactionModule.type != 'tolend' ) {
                     <div class="col-12">
                         <strong>Item Category</strong>
                         <select class="form-select" id="inlineFormSelectPref"
@@ -71,7 +72,7 @@
                             Click here add new category
                         </a>
                     </div>
-                
+                }
 
                 <!-- Item Cost -->
                 <div class="col-12">
@@ -103,7 +104,7 @@
         @for (d of this.filteredList; track $index) {
         <div style="margin-top: 15px;">
             <div>
-                <strong>{{this.datePipe.transform(d.date,"dd-MMM-yyyy")}} &nbsp;</strong>
+                <strong>{{this.datePipe.transform(d.date,"YYYY-MMM-dd")}} &nbsp;</strong>
             </div>
             <div>
                 <strong>Expense:
@@ -125,7 +126,7 @@
 
                 @if (i.itemName!='' && i.itemName!=null) {
 
-                <tr [ngClass]="i.type=='credit'?'green-td':i.type=='debit'?'red-td':i.type=='tolend' && i.itemCategoryId =='Paying Dues'?'red-td':''">
+                <tr [ngClass]="i.type=='credit'?'green-td':i.type=='debit'?'red-td':''">
                     <td>{{i.itemName}}</td>
                     <td>{{i.itemCost}}</td>
                     <td (click)="deleteTransaction(i.id)"><svg xmlns="http://www.w3.org/2000/svg" height="14"

@@ -8,25 +8,6 @@ export class DataStoreService {
 
   constructor(public apiService: ApiService) { }
 
-  monthMap: { [key: string]: string } = {
-    Jan: 'January',
-    Feb: 'February',
-    Mar: 'March',
-    Apr: 'April',
-    May: 'May',
-    Jun: 'June',
-    Jul: 'July',
-    Aug: 'August',
-    Sep: 'September',
-    Oct: 'October',
-    Nov: 'November',
-    Dec: 'December',
-  };
-
-  convertMonth(abbreviatedMonth: string): string {
-    return this.monthMap[abbreviatedMonth] || 'Invalid Month';
-  }
-
   /**
    * Iterate cookie and pushing in list
    * @returns list
@@ -99,9 +80,6 @@ export class DataStoreService {
               }
               if (i2.type == 'credit') {
                 tempInt2 = tempInt2 + i2.itemCost;
-              }
-              if (i2.type == 'tolend' && i2.itemCategoryId=='Paying Dues') {
-                tempInt = tempInt + i2.itemCost;
               }
               returnList[i].totalExpenseOfTheDay = tempInt;
               returnList[i].totalIncomeOfTheDay = tempInt2;
