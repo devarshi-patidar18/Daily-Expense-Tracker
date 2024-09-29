@@ -29,7 +29,7 @@ type MonthlyTotal = {
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [ChartModule, FormsModule,CommonModule],
+    imports: [ChartModule, FormsModule, CommonModule],
     templateUrl: './dashboard.component.html',
     providers: [DatePipe],
     styleUrl: './dashboard.component.css'
@@ -56,8 +56,8 @@ export class DashboardComponent {
     isShowStatistics: boolean = false;
     payments: any = [];
     showPaymentsGrid: boolean = false;
-    totalPaid:number = 0;
-    totalUnpaid:number = 0;
+    totalPaid: number = 0;
+    totalUnpaid: number = 0;
     constructor(public dataStore: DataStoreService, public cookie: CookieService, public datePipe: DatePipe, public apiService: ApiService) { }
 
     ngOnInit() {
@@ -66,7 +66,8 @@ export class DashboardComponent {
         // this.categoryChartDetails('Sep');
         this.monthChartDetails(this.getMonthDataFromLocalStorage());
         this.monthsList = this.getMonthDataFromLocalStorage();
-
+        console.log(this.dataStore.convertMonth(this.monthsList[0].monthName));
+        this.updateProgress(this.monthsList[0] != null && this.monthsList[0] != undefined ? this.monthsList[0].monthName : '', this.monthsList[0] != null && this.monthsList[0] != undefined ? this.monthsList[0].totalExpenseOfTheMonth : 0);
     }
 
     /**Get Monthly Data from Local Storage */
@@ -81,7 +82,7 @@ export class DashboardComponent {
         tempList.forEach((e1: any) => {
             let totalExpenseOfTheMonth: number = 0;
             let totalIncomeOfTheMonth: number = 0;
-            this.dataStore.organiseData(this.dataStore.transferLocalStorageDataToList("transactions"),'date').forEach((e2: any) => {
+            this.dataStore.organiseData(this.dataStore.transferLocalStorageDataToList("transactions"), 'date').forEach((e2: any) => {
                 if (e1 == (this.datePipe.transform(e2.date, "MMM"))) {
                     totalExpenseOfTheMonth = totalExpenseOfTheMonth + e2?.totalExpenseOfTheDay;
                     totalIncomeOfTheMonth = totalIncomeOfTheMonth + e2?.totalIncomeOfTheDay;
@@ -105,7 +106,7 @@ export class DashboardComponent {
     organiseTransactionByCatAndItem(chartType: any) {
         const monthlyTotals: { [key: string]: ItemTotals } = {};
 
-        this.dataStore.organiseData(this.dataStore.transferLocalStorageDataToList("transactions"),'date').forEach((entry: any) => {
+        this.dataStore.organiseData(this.dataStore.transferLocalStorageDataToList("transactions"), 'date').forEach((entry: any) => {
             const monthName: any = this.datePipe.transform(entry.date, "MMM");
 
             if (!monthlyTotals[monthName]) {
@@ -251,7 +252,7 @@ export class DashboardComponent {
                     return data;
                 }
             }))
-        this.searchedResults = this.dataStore.organiseData(filteredList,'date');
+        this.searchedResults = this.dataStore.organiseData(filteredList, 'date');
     }
 
     showStatics() {
@@ -259,19 +260,31 @@ export class DashboardComponent {
     }
 
     getPaymentDetails() {
-        this.totalPaid=0;
-        this.totalUnpaid=0;
+        this.totalPaid = 0;
+        this.totalUnpaid = 0;
         let tempList: any = [];
 
         this.dataStore.transferLocalStorageDataToList("transactions").forEach((transaction: any) => {
-            if (transaction.type == 'borrow' || transaction.type == 'tolend') {tempList.push(transaction);}
+            if (transaction.type == 'borrow' || transaction.type == 'tolend') { tempList.push(transaction); }
         });
 
-        this.payments = this.dataStore.organiseData(tempList,'itemName');
-        this.payments.forEach((payment:any) => {
+        this.payments = this.dataStore.organiseData(tempList, 'itemName');
+        this.payments.forEach((payment: any) => {
             this.totalPaid = this.totalPaid + payment.totalLended;
             this.totalUnpaid = this.totalUnpaid + payment.totalBorrowed;
         });
+    }
+
+    progress: any = 0;
+
+    updateProgress(monthName: any, expenseOfTheMonth: any) {
+        this.progress = expenseOfTheMonth*100/parseInt(this.apiService.getItemFromLocal(this.dataStore.convertMonth(monthName)));
+        if (this.progress < 100) {
+            this.progress += 10; // Increase progress by 10%
+            // const progressBar:any = document.getElementById('progressBar');
+            // progressBar.style.width = this.progress + '%';
+            // progressBar.textContent = this.progress + '%'; // Display progress percentage
+        }
     }
 
 }

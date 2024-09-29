@@ -105,3 +105,11 @@ table {
         width: 33%; /* Make boxes wider on smaller screens */
     }
 }
+
+.bg-green{
+    background-color: #4caf50;
+}
+
+.bg-red{
+    background-color: red;
+}
