@@ -58,16 +58,18 @@ export class DashboardComponent {
     showPaymentsGrid: boolean = false;
     totalPaid: number = 0;
     totalUnpaid: number = 0;
+    thisMonthName:any="";
     constructor(public dataStore: DataStoreService, public cookie: CookieService, public datePipe: DatePipe, public apiService: ApiService) { }
 
     ngOnInit() {
+        this.thisMonthName = this.datePipe.transform(new Date(),"MMMM");
         this.transactionsList = this.dataStore.transferLocalStorageDataToList("transactions");
         this.categoriesList = this.dataStore.transferLocalStorageDataToList("categories");
         // this.categoryChartDetails('Sep');
         this.monthChartDetails(this.getMonthDataFromLocalStorage());
         this.monthsList = this.getMonthDataFromLocalStorage();
         // console.log(this.dataStore.convertMonth(this.monthsList[0].monthName));
-        this.updateProgress(this.monthsList[0] != null && this.monthsList[0] != undefined ? this.monthsList[0].monthName : '', this.monthsList[0] != null && this.monthsList[0] != undefined ? this.monthsList[0].totalExpenseOfTheMonth : 0);
+        this.updateProgress(this.datePipe.transform(new Date(), "ddMMyyyy"), this.monthsList[0] != null && this.monthsList[0] != undefined ? this.monthsList[0].totalExpenseOfTheMonth : 0);
     }
 
     /**Get Monthly Data from Local Storage */
@@ -278,7 +280,7 @@ export class DashboardComponent {
     progress: any = 0;
 
     updateProgress(monthName: any, expenseOfTheMonth: any) {
-        this.progress = expenseOfTheMonth*100/parseInt(this.apiService.getItemFromLocal(this.dataStore.convertMonth(monthName)));
+        this.progress = expenseOfTheMonth*100/parseInt(this.apiService.getItemFromLocal(this.datePipe.transform(new Date(), "ddMMyyyy")));
         if (this.progress < 100) {
             this.progress += 10; // Increase progress by 10%
             // const progressBar:any = document.getElementById('progressBar');
