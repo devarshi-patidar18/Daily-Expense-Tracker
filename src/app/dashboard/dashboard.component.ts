@@ -66,7 +66,7 @@ export class DashboardComponent {
         // this.categoryChartDetails('Sep');
         this.monthChartDetails(this.getMonthDataFromLocalStorage());
         this.monthsList = this.getMonthDataFromLocalStorage();
-        console.log(this.dataStore.convertMonth(this.monthsList[0].monthName));
+        // console.log(this.dataStore.convertMonth(this.monthsList[0].monthName));
         this.updateProgress(this.monthsList[0] != null && this.monthsList[0] != undefined ? this.monthsList[0].monthName : '', this.monthsList[0] != null && this.monthsList[0] != undefined ? this.monthsList[0].totalExpenseOfTheMonth : 0);
     }
 
