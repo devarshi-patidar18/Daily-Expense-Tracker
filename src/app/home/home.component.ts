@@ -162,18 +162,19 @@ export class HomeComponent {
 
   setCategoryList(transactionType: any) {
     if ((transactionType == "tolend")) {
-      
-      let tempList:any = [
-        { catId: 1, name: "Paying Back" },
-        { catId: 2, name: "Paying Dues" },
-        { catId: 3, name: "To Lend" }
+
+      let tempList: any = [
+        { catId: 1.1, name: "Paying Back" },
+        { catId: 2.1, name: "Paying Dues" },
+        { catId: 3.1, name: "To Lend" }
       ]
       this.categoryList = tempList;
     }
 
-   else if (transactionType == "borrow") {
+    else if (transactionType == "borrow") {
+      this.categoryList = this.dataStore.transferLocalStorageDataToList("categories");
       this.categoryList.push({
-        catId: 1,
+        catId: 1.2,
         name: "Cash"
       });
     }

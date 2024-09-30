@@ -75,19 +75,19 @@ export class OthersComponent {
   }
 
   addExpectedExpense(expectedExpense:any){
-    let monthName:any= this.datePipe.transform(new Date(),"MMMM");
-    this.apiService.setItemInLocal(monthName,expectedExpense);
-    this.expectedExpenseMonthsList = this.getExpectedExpenseList();
+    // let monthName:any= this.datePipe.transform(new Date(),"ddMMYYYY");
+    // this.apiService.setItemInLocal(monthName,expectedExpense);
+    // this.expectedExpenseMonthsList = this.getExpectedExpenseList();
   }
 
   getExpectedExpenseList(){
     let tempList:any =[];
 
     // tempList = Array.from(this.dataStore.monthMap[__values])
-    tempList.push({
-      month:"September",
-      expectedExpense:this.apiService.getItemFromLocal("September")
-    });
+    // tempList.push({
+    //   month:this.datePipe.transform(new Date(),"dd-MMMM-YYYY"),
+    //   expectedExpense:this.apiService.getItemFromLocal(this.datePipe.transform(new Date(),"ddMMYYYY"))
+    // });
     return tempList;
   }
 
