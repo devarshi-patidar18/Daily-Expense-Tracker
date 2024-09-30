@@ -63,6 +63,7 @@ export class HomeComponent {
       obj.itemCategoryId = saveDataObj.selectedCategory;
       obj.itemCost = saveDataObj.itemCost;
       obj.type = saveDataObj.type;
+      obj.listName = "transaction";
 
       this.apiService.setItemInLocal(this.transactionModule.id, JSON.stringify(obj));
 
@@ -83,17 +84,29 @@ export class HomeComponent {
     // New Transaction save
     else if (saveDataObj.itemName != '' && saveDataObj.itemName != null && saveDataObj.itemName != undefined
       && saveDataObj.date != null && saveDataObj.date != '' && saveDataObj != undefined) {
-      let latestIdAvailable = this.apiService.lengthOfDataInLocalStorage() + 1;
+      console.log('in save')
+      // let latestIdAvailable = this.apiService.lengthOfDataInLocalStorage() + 1;
+      let numArray: number[] =[];
+        this.dataStore.convertResponseToArray(this.apiService.getAllLocalStorageData()).forEach((data: any,index:any) => {
+          if(data.id!=null){
+            numArray[index] = data.id;
+          }
+          if(data.catId!=null){
+            numArray[index] = data.catId;
+          }
+        });
+         let latestIdAvailable:any  = this.dataStore.findMaximumNumber(numArray)
       let obj: any = {};
-      obj.id = latestIdAvailable;
+      obj.id =latestIdAvailable+1;
       obj.date = saveDataObj.date;
       obj.itemName = saveDataObj.itemName;
       obj.itemCategoryId = saveDataObj.selectedCategory;
       obj.itemCost = saveDataObj.itemCost;
       obj.type = saveDataObj.type;
+      obj.listName = "transaction";
 
       // this.cookie.set(latestIdAvailable, JSON.stringify(obj));
-      this.apiService.setItemInLocal(latestIdAvailable, JSON.stringify(obj));
+      this.apiService.setItemInLocal(latestIdAvailable+1, JSON.stringify(obj));
 
       // Empty the list to avoid duplicate data
       this.transactionDataList = [];
@@ -115,16 +128,18 @@ export class HomeComponent {
 
   // Delete by transaction id
   deleteTransaction(deleteId: any) {
+    if (confirm("Do you want to delete this data?")) {
+      // Attempt to delete the item from local storage
+      const deletionSuccessful = this.apiService.deleteItemFromLocal(deleteId);
 
-    // if (confirm("Do you want to delete this data?")) {
-    // this.transactionDataList = [];
-    // this.apiService.deleteItemFromLocal(deleteId);
+      if (deletionSuccessful) {
+        // Refresh the list from local storage
+        window.location.reload();
 
-    //   this.transactionDataList = this.dataStore.transferLocalStorageDataToList();
-    //   this.filteredList = this.dataStore.organiseData(this.transactionDataList);
-
-    // };
-    // alert("Delete Feature is not yet implemented!")
+      } else {
+        alert("Oops! Something went wrong. Please try again!");
+      }
+    }
   }
 
   editTransaction(editData: any) {
