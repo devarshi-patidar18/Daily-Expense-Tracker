@@ -23,7 +23,7 @@ export class HomeComponent {
   categoryList: any = [];
   isAddButtonDisabled: boolean = true;
   openAddTransactionForm: boolean = false;
-  alertMessage:string="";
+  alertMessage: string = "";
   constructor(public dataStore: DataStoreService, public datePipe: DatePipe, public apiService: ApiService) { }
 
   ngOnInit() {
@@ -66,15 +66,15 @@ export class HomeComponent {
       obj.listName = "transaction";
 
       ;
-      if(this.apiService.setItemInLocal(this.transactionModule.id, JSON.stringify(obj))=="Data Saved"){
+      if (this.apiService.setItemInLocal(this.transactionModule.id, JSON.stringify(obj)) == "Data Saved") {
         this.alertMessage = "Transaction Updated";
       }
-      else{
-        this.alertMessage="Oops! Something went wrong!";
+      else {
+        this.alertMessage = "Oops! Something went wrong!";
       }
 
       setTimeout(() => {
-        this.alertMessage="";
+        this.alertMessage = "";
       }, 2000);
 
       // Empty the list to avoid duplicate data
@@ -94,20 +94,19 @@ export class HomeComponent {
     // New Transaction save
     else if (saveDataObj.itemName != '' && saveDataObj.itemName != null && saveDataObj.itemName != undefined
       && saveDataObj.date != null && saveDataObj.date != '' && saveDataObj != undefined) {
-      console.log('in save')
       // let latestIdAvailable = this.apiService.lengthOfDataInLocalStorage() + 1;
-      let numArray: number[] =[];
-        this.dataStore.convertResponseToArray(this.apiService.getAllLocalStorageData()).forEach((data: any,index:any) => {
-          if(data.id!=null){
-            numArray[index] = data.id;
-          }
-          if(data.catId!=null){
-            numArray[index] = data.catId;
-          }
-        });
-         let latestIdAvailable:any  = this.dataStore.findMaximumNumber(numArray)
+      let numArray: number[] = [];
+      this.dataStore.convertResponseToArray(this.apiService.getAllLocalStorageData()).forEach((data: any, index: any) => {
+        if (data.id != null) {
+          numArray[index] = data.id;
+        }
+        if (data.catId != null) {
+          numArray[index] = data.catId;
+        }
+      });
+      let latestIdAvailable: any = this.dataStore.findMaximumNumber(numArray)
       let obj: any = {};
-      obj.id =latestIdAvailable+1;
+      obj.id = latestIdAvailable + 1;
       obj.date = saveDataObj.date;
       obj.itemName = saveDataObj.itemName;
       obj.itemCategoryId = saveDataObj.selectedCategory;
@@ -116,17 +115,17 @@ export class HomeComponent {
       obj.listName = "transaction";
 
       // this.cookie.set(latestIdAvailable, JSON.stringify(obj));
-      if(this.apiService.setItemInLocal(latestIdAvailable+1, JSON.stringify(obj))=="Data Saved"){
+      if (this.apiService.setItemInLocal(latestIdAvailable + 1, JSON.stringify(obj)) == "Data Saved") {
         this.alertMessage = "Transaction Saved";
       }
-      else{
-        this.alertMessage="Oops! Something went wrong!";
+      else {
+        this.alertMessage = "Oops! Something went wrong!";
       }
 
       setTimeout(() => {
-        this.alertMessage="";
+        this.alertMessage = "";
       }, 2000);
-      
+
       // Empty the list to avoid duplicate data
       this.transactionDataList = [];
       this.filteredList = [];
@@ -135,7 +134,7 @@ export class HomeComponent {
       // if (this.cookie.check(latestIdAvailable)) {
       this.transactionDataList = this.dataStore.transferLocalStorageDataToList("transactions");
       this.filteredList = this.dataStore.organiseData(this.transactionDataList, 'date');
-      
+
       // }
       // console.log(this.filteredList)
       this.isAddButtonDisabled = true;

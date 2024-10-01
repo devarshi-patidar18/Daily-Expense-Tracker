@@ -48,7 +48,7 @@ export class OthersComponent {
 
       this.apiService.setItemInLocal(saveDataObj.catId, JSON.stringify(obj));
 
-      // Empty the list to avoid duplicate data
+      // Empty the list to avoid duplicate data 
       this.categoryList = [];
       this.categoryModel = {};
       this.categoryList = this.dataStore.transferLocalStorageDataToList("categories");
@@ -56,7 +56,17 @@ export class OthersComponent {
     }
     // New Transaction save
     else if (saveDataObj != undefined && saveDataObj.name != '' && saveDataObj.name != null) {
-      let latestIdAvailable: any = this.apiService.lengthOfDataInLocalStorage() + 1;
+      // let latestIdAvailable: any = this.apiService.lengthOfDataInLocalStorage() + 1;
+      let numArray: number[] = [];
+      this.dataStore.convertResponseToArray(this.apiService.getAllLocalStorageData()).forEach((data: any, index: any) => {
+        if (data.id != null) {
+          numArray[index] = data.id;
+        }
+        if (data.catId != null) {
+          numArray[index] = data.catId;
+        }
+      });
+      let latestIdAvailable: any = this.dataStore.findMaximumNumber(numArray)
       let obj: any = {};
       obj.catId = latestIdAvailable;
       obj.name = saveDataObj.name;
