@@ -68,11 +68,11 @@ export class OthersComponent {
       });
       let latestIdAvailable: any = this.dataStore.findMaximumNumber(numArray)
       let obj: any = {};
-      obj.catId = latestIdAvailable;
+      obj.catId = latestIdAvailable+1;
       obj.name = saveDataObj.name;
       obj.listName = "category";
 
-      this.apiService.setItemInLocal(latestIdAvailable, JSON.stringify(obj));
+      this.apiService.setItemInLocal(latestIdAvailable+1, JSON.stringify(obj));
 
       this.categoryList = this.dataStore.transferLocalStorageDataToList("categories");
 
