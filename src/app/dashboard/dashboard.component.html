@@ -233,9 +233,10 @@
                         <strong>{{d.itemName}} &nbsp;</strong>
                     </div>
                     <div>
-                        <strong>Paid:
-                            &nbsp;{{d.totalLended}} &nbsp;&nbsp;&nbsp;Unpaid
-                            {{d.totalBorrowed}}</strong>
+                        <strong>
+                            <!-- Paid:&nbsp;{{d.totalLended}} &nbsp;&nbsp;&nbsp;Unpaid{{d.totalBorrowed}} -->
+                             Total:<span  [ngClass]="d.totalLended - d.totalBorrowed<0?'text-red':'text-green'">&nbsp;{{d.totalLended - d.totalBorrowed}}</span>
+                        </strong>
                     </div>
                 </div>
                 <table class="item-table">

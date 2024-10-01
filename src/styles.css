@@ -113,3 +113,11 @@ table {
 .bg-red{
     background-color: red;
 }
+
+.text-red{
+    color: rgb(235, 17, 17);
+}
+
+.text-green{
+    color: rgb(16, 134, 16);
+}

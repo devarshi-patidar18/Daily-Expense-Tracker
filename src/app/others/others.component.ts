@@ -22,6 +22,7 @@ export class OthersComponent {
   isExpectedExpense: boolean = false;
   expectedExpense:number = 0;
   expectedExpenseMonthsList:any = []
+  showAboutUs:boolean=false;
   constructor(public cookie: CookieService, public dataStore: DataStoreService, public apiService: ApiService,public datePipe:DatePipe) { }
 
   ngOnInit() {
