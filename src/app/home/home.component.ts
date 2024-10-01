@@ -23,7 +23,7 @@ export class HomeComponent {
   categoryList: any = [];
   isAddButtonDisabled: boolean = true;
   openAddTransactionForm: boolean = false;
-
+  alertMessage:string="";
   constructor(public dataStore: DataStoreService, public datePipe: DatePipe, public apiService: ApiService) { }
 
   ngOnInit() {
@@ -65,7 +65,17 @@ export class HomeComponent {
       obj.type = saveDataObj.type;
       obj.listName = "transaction";
 
-      this.apiService.setItemInLocal(this.transactionModule.id, JSON.stringify(obj));
+      ;
+      if(this.apiService.setItemInLocal(this.transactionModule.id, JSON.stringify(obj))=="Data Saved"){
+        this.alertMessage = "Transaction Updated";
+      }
+      else{
+        this.alertMessage="Oops! Something went wrong!";
+      }
+
+      setTimeout(() => {
+        this.alertMessage="";
+      }, 2000);
 
       // Empty the list to avoid duplicate data
       this.transactionDataList = [];
@@ -106,8 +116,17 @@ export class HomeComponent {
       obj.listName = "transaction";
 
       // this.cookie.set(latestIdAvailable, JSON.stringify(obj));
-      this.apiService.setItemInLocal(latestIdAvailable+1, JSON.stringify(obj));
+      if(this.apiService.setItemInLocal(latestIdAvailable+1, JSON.stringify(obj))=="Data Saved"){
+        this.alertMessage = "Transaction Saved";
+      }
+      else{
+        this.alertMessage="Oops! Something went wrong!";
+      }
 
+      setTimeout(() => {
+        this.alertMessage="";
+      }, 2000);
+      
       // Empty the list to avoid duplicate data
       this.transactionDataList = [];
       this.filteredList = [];
@@ -116,7 +135,7 @@ export class HomeComponent {
       // if (this.cookie.check(latestIdAvailable)) {
       this.transactionDataList = this.dataStore.transferLocalStorageDataToList("transactions");
       this.filteredList = this.dataStore.organiseData(this.transactionDataList, 'date');
-      console.log()
+      
       // }
       // console.log(this.filteredList)
       this.isAddButtonDisabled = true;

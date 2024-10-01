@@ -1,6 +1,11 @@
 <div class="parent-page-css ">
     <div class="container">
         <div class="row justify-content-md-center">
+            @if (alertMessage!="") {
+                <div class="alert alert-success" [ngClass]="alertMessage=='Transaction Saved'?'alert-success':alertMessage=='Oops! Something went wrong!'?'alert-danger':alertMessage=='Transaction Updated'?'alert-info':''" role="alert">
+                    {{this.alertMessage}}
+                </div>
+            }
             @if (categoryList.length==0) {<marquee onmouseover="this.stop();" onmouseout="this.start();"
                 style="color: red;">Please Add Categories before proceeding with transactions!!</marquee>}
 
