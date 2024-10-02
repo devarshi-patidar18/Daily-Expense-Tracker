@@ -5,15 +5,17 @@
             <!--------------------------------------------- Progress Bar ------------------------------------------------------->
             <strong style="margin-top: 10px;">{{this.thisMonthName}}</strong>
             <div class="progress-container">
-                
-                <div class="progress-bar" id="progressBar" [style.width]="this.progress + '%'" [ngClass]="this.progress<75?'bg-green':'bg-red'">{{this.progress}}%</div>
+
+                <div class="progress-bar" id="progressBar" [style.width]="this.progress + '%'"
+                    [ngClass]="this.progress<75?'bg-green':'bg-red'">{{this.progress}}%</div>
             </div>
-        
+
             <!-- <button (click)="updateProgress()">Increase Progress</button> -->
 
             <!------------------------------------------ Global Search Accordian Starts ------------------------------------------>
 
-            <button type="submit" class="btn btn-primary" (click)="globalSearchButtonClicked();isChartOptions=false;isShowStatistics=false;showPaymentsGrid=false">
+            <button type="submit" class="btn btn-primary"
+                (click)="globalSearchButtonClicked();isChartOptions=false;isShowStatistics=false;showPaymentsGrid=false">
                 Global Search <i class="fa-solid fa-search"></i>
             </button>
 
@@ -80,7 +82,8 @@
 
 
             <!------------------------------------------ Charts Accordian Starts ------------------------------------------>
-            <button type="submit" class="btn btn-primary" (click)="chartsAccordion('');showPaymentsGrid=false;showGlobalFilter=false;isShowStatistics=false">
+            <button type="submit" class="btn btn-primary"
+                (click)="chartsAccordion('');showPaymentsGrid=false;showGlobalFilter=false;isShowStatistics=false">
                 Charts <i class="fa-solid fa-chart-column"></i>
             </button>
 
@@ -192,80 +195,150 @@
 
 
             <!------------------------------------------ Statics Accordian Starts ------------------------------------------>
-            <button type="submit" class="btn btn-primary" (click)="showStatics();showPaymentsGrid=false;isChartOptions=false;showGlobalFilter=false">
+            <button type="submit" class="btn btn-primary"
+                (click)="this.isShowStatistics = !this.isShowStatistics;showPaymentsGrid=false;isChartOptions=false;showGlobalFilter=false">
                 Statics <i class="fa-solid fa-calculator"></i>
             </button>
             @if (isShowStatistics) {
-            <div class="col-12" style="display: flex;justify-content: center;">
-                <div class="col-6">
-                    <button type="submit" class="btn {{this.chartButton=='monthly'?'btn-secondary':''}} m-1"
-                        style="border: 1px solid gray;">
-                        Daily Average Expense: <br>190
-                    </button>
-                </div>
-                <div class="col-6">
-                    <button type="submit" class="btn {{this.chartButton=='category'?'btn-secondary':''}} m-1"
-                        style="border: 1px solid gray;">
-                        Monthly Average Expense: 20000
-                    </button>
-                </div>
-            </div>
+            <!-- Statics Grid starts -->
+        
+                
+                <table class="item-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Month</th>
+                            <th scope="col">Income</th>
+                            <th scope="col">Exp</th>
+                            <th scope="col">Remain</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (i of this.statics; track $index) {
+    
+                        <tr>
+                            <td>{{i.monthName}}</td>
+                            <td>{{i.totalIncomeOfTheMonth}}</td>
+                            <td>{{i.totalExpenseOfTheMonth}}</td>
+                            <td [ngClass]="i.remainingOfTheMonth>0?'text-green':'text-red'">{{i.remainingOfTheMonth}}</td>
+                        </tr>
+                        
+                        }
+                    </tbody>
+                </table>
+                
+                <!-- Statics Grid Ends -->
 
             }
             <!------------------------------------------ Statics Accordian Ends ------------------------------------------>
 
 
             <!------------------------------------------ Payments AAccordian Starts ------------------------------------------>
-            <button type="submit" class="btn btn-primary" (click)="getPaymentDetails();this.showPaymentsGrid=!this.showPaymentsGrid;showGlobalFilter=false;isShowStatistics=false;isChartOptions=false">
+            <button type="submit" class="btn btn-primary"
+                (click)="getPaymentDetails();this.showPaymentsGrid=!this.showPaymentsGrid;showGlobalFilter=false;isShowStatistics=false;isChartOptions=false">
                 Payments <i class="fa-solid fa-indian-rupee"></i>
             </button>
 
             @if (showPaymentsGrid) {
+            <div>
+                <strong>
+                    Total Paid: {{totalPaid}} &nbsp;&nbsp; Total Unpaid: {{totalUnpaid}}
+                </strong>
+            </div>
+            <!-- Payment Grid starts -->
+            @for (d of this.payments; track $index) {
+            <div style="">
+                <div>
+                    <strong>{{d.itemName}} &nbsp;</strong>
+                </div>
                 <div>
                     <strong>
-                        Total Paid: {{totalPaid}} &nbsp;&nbsp; Total Unpaid: {{totalUnpaid}} 
+                        <!-- Paid:&nbsp;{{d.totalLended}} &nbsp;&nbsp;&nbsp;Unpaid{{d.totalBorrowed}} -->
+                        Total:<span
+                            [ngClass]="d.totalLended - d.totalBorrowed<0?'text-red':'text-green'">&nbsp;{{d.totalLended
+                            - d.totalBorrowed}}</span>
                     </strong>
                 </div>
-                <!-- Payment Grid starts -->
-            @for (d of this.payments; track $index) {
-                <div style="">
-                    <div>
-                        <strong>{{d.itemName}} &nbsp;</strong>
-                    </div>
-                    <div>
-                        <strong>
-                            <!-- Paid:&nbsp;{{d.totalLended}} &nbsp;&nbsp;&nbsp;Unpaid{{d.totalBorrowed}} -->
-                             Total:<span  [ngClass]="d.totalLended - d.totalBorrowed<0?'text-red':'text-green'">&nbsp;{{d.totalLended - d.totalBorrowed}}</span>
-                        </strong>
-                    </div>
-                </div>
-                <table class="item-table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Category</th>
-                            <th scope="col">Amount</th>
-                            <th scope="col">Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (i of d.transactions; track $index) {
-    
-                        @if (i.itemName!='' && i.itemName!=null) {
-    
-                        <tr [ngClass]="i.type=='tolend'?'green-td':i.type=='borrow'?'red-td':''">
-                            <td>{{i.itemCategoryId}}</td>
-                            <td>{{i.itemCost}}</td>
-                            <td>{{this.datePipe.transform(i.date,'d/M/yy')}}</td>
-                        </tr>
-                        }
-                        }
-                    </tbody>
-                </table>
-                }
-                <!-- Payment Grid Ends -->
+            </div>
+            <table class="item-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Category</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (i of d.transactions; track $index) {
+
+                    @if (i.itemName!='' && i.itemName!=null) {
+
+                    <tr [ngClass]="i.type=='tolend'?'green-td':i.type=='borrow'?'red-td':''">
+                        <td>{{i.itemCategoryId}}</td>
+                        <td>{{i.itemCost}}</td>
+                        <td>{{this.datePipe.transform(i.date,'d/M/yy')}}</td>
+                    </tr>
+                    }
+                    }
+                </tbody>
+            </table>
+            }
+            <!-- Payment Grid Ends -->
             }
 
             <!------------------------------------------ Payments AAccordian Ends ------------------------------------------>
+
+            <!------------------------------------------ Loan Accordian Starts --------------------------------------------->
+            <button type="submit" class="btn btn-primary"
+                (click)="getLoanDetails();this.showLoansGrid=!this.showLoansGrid;this.showPaymentsGrid=false;showGlobalFilter=false;isShowStatistics=false;isChartOptions=false">
+                Loans <i class="fa-solid fa-indian-rupee"></i>
+            </button>
+
+            @if (showLoansGrid) {
+            <div>
+                <strong>
+                    Total: +00
+                </strong>
+            </div>
+            <!-- Loan Grid starts -->
+            @for (d of this.loans; track $index) {
+            <div>
+                <div>
+                    <strong>{{d.itemName}} &nbsp;</strong>
+                </div>
+                <div>
+                    <strong>
+                        Total:<span
+                            [ngClass]="d.totalLended - d.totalBorrowed<0?'text-red':'text-green'">&nbsp;{{d.totalLended
+                            - d.totalBorrowed}}</span>
+                    </strong>
+                </div>
+            </div>
+            <table class="item-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Category</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (i of d.transactions; track $index) {
+
+                    @if (i.itemName!='' && i.itemName!=null) {
+
+                    <tr [ngClass]="i.type=='tolend'?'green-td':i.type=='borrow'?'red-td':''">
+                        <td>{{i.itemCategoryId}}</td>
+                        <td>{{i.itemCost}}</td>
+                        <td>{{this.datePipe.transform(i.date,'d/M/yy')}}</td>
+                    </tr>
+                    }
+                    }
+                </tbody>
+            </table>
+            }
+            <!-- Loan Grid Ends -->
+            }
+            <!------------------------------------------ Loan Accordian Ends --------------------------------------------->
 
         </div>
     </div>

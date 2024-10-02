@@ -59,6 +59,9 @@ export class DashboardComponent {
     totalPaid: number = 0;
     totalUnpaid: number = 0;
     thisMonthName:any="";
+    loans:any=[];
+    showLoansGrid:boolean=false;
+    statics:any=[];
     constructor(public dataStore: DataStoreService, public cookie: CookieService, public datePipe: DatePipe, public apiService: ApiService) { }
 
     ngOnInit() {
@@ -70,6 +73,7 @@ export class DashboardComponent {
         this.monthsList = this.getMonthDataFromLocalStorage();
         // console.log(this.dataStore.convertMonth(this.monthsList[0].monthName));
         this.updateProgress(this.datePipe.transform(new Date(), "ddMMyyyy"), this.monthsList[0] != null && this.monthsList[0] != undefined ? this.monthsList[0].totalExpenseOfTheMonth : 0);
+        this.showStatics(this.getMonthDataFromLocalStorage());
     }
 
     /**Get Monthly Data from Local Storage */
@@ -257,8 +261,17 @@ export class DashboardComponent {
         this.searchedResults = this.dataStore.organiseData(filteredList, 'date');
     }
 
-    showStatics() {
-        this.isShowStatistics = !this.isShowStatistics;
+    showStatics(inputDataList:any) {
+        inputDataList.forEach((e1: any) => {
+            this.statics.push(
+                {
+                    monthName:e1.monthName,
+                    totalIncomeOfTheMonth:e1.totalIncomeOfTheMonth,
+                    totalExpenseOfTheMonth:e1.totalExpenseOfTheMonth,
+                    remainingOfTheMonth:(e1.totalIncomeOfTheMonth-e1.totalExpenseOfTheMonth)
+                }
+            )
+        });
     }
 
     getPaymentDetails() {
@@ -280,13 +293,17 @@ export class DashboardComponent {
     progress: any = 0;
 
     updateProgress(monthName: any, expenseOfTheMonth: any) {
-        this.progress = expenseOfTheMonth*100/parseInt(this.apiService.getItemFromLocal(this.datePipe.transform(new Date(), "ddMMyyyy")));
+        this.progress = (expenseOfTheMonth*100)/parseInt(this.apiService.getItemFromLocal(this.datePipe.transform(new Date(), "ddMMyyyy")));
         if (this.progress < 100) {
             this.progress += 10; // Increase progress by 10%
             // const progressBar:any = document.getElementById('progressBar');
             // progressBar.style.width = this.progress + '%';
             // progressBar.textContent = this.progress + '%'; // Display progress percentage
         }
+    }
+
+    getLoanDetails(){
+
     }
 
 }
