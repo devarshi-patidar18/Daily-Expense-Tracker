@@ -43,12 +43,13 @@
                 <div style="margin-top: 15px;">
                     <div>
                         <strong>{{this.datePipe.transform(d.date,"dd-MMM-yyyy")}} &nbsp;</strong>
+                        
                     </div>
-                    <!-- <div>
+                    <div>
                         <strong>Expense:
                             &nbsp;{{d.totalExpenseOfTheDay}} &nbsp;&nbsp;&nbsp;Income:
                             {{d.totalIncomeOfTheDay}}</strong>
-                    </div> -->
+                    </div>
                 </div>
                 <table class="item-table">
                     <thead>
@@ -201,32 +202,61 @@
             </button>
             @if (isShowStatistics) {
             <!-- Statics Grid starts -->
-        
-                
-                <table class="item-table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Month</th>
-                            <th scope="col">Income</th>
-                            <th scope="col">Exp</th>
-                            <th scope="col">Remain</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (i of this.statics; track $index) {
-    
-                        <tr>
-                            <td>{{i.monthName}}</td>
-                            <td>{{i.totalIncomeOfTheMonth}}</td>
-                            <td>{{i.totalExpenseOfTheMonth}}</td>
-                            <td [ngClass]="i.remainingOfTheMonth>0?'text-green':'text-red'">{{i.remainingOfTheMonth}}</td>
-                        </tr>
-                        
-                        }
-                    </tbody>
-                </table>
-                
-                <!-- Statics Grid Ends -->
+
+            <h5>Statics</h5>
+            <table class="item-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Month</th>
+                        <th scope="col">Income</th>
+                        <th scope="col">Exp</th>
+                        <th scope="col">Remain</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (i of this.statics; track $index) {
+
+                    <tr>
+                        <td>{{i.monthName}}</td>
+                        <td>{{i.totalIncomeOfTheMonth}}</td>
+                        <td>{{i.totalExpenseOfTheMonth}}</td>
+                        <td [ngClass]="i.remainingOfTheMonth>0?'text-green':'text-red'">{{i.remainingOfTheMonth}}</td>
+                    </tr>
+
+                    }
+                </tbody>
+            </table>
+
+            <!-- Statics Grid Ends -->
+
+
+            <!-- Income Grid starts -->
+
+            <h5>Incomes</h5>
+            <table class="item-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Salary</th>
+                        <th scope="col">Part Time</th>
+                        <th scope="col">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (i of this.incomes; track $index) {
+
+                    <tr>
+                        <td>{{i.name}}</td>
+                        <td>{{i.salary}}</td>
+                        <td>{{i.parttime}}</td>
+                        <td style="text-decoration:solid;">{{i.salary + i.parttime}}</td>
+                    </tr>
+
+                    }
+                </tbody>
+            </table>
+
+            <!-- Income Grid Ends -->
 
             }
             <!------------------------------------------ Statics Accordian Ends ------------------------------------------>

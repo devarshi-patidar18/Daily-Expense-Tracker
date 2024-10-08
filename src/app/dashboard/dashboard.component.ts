@@ -58,22 +58,56 @@ export class DashboardComponent {
     showPaymentsGrid: boolean = false;
     totalPaid: number = 0;
     totalUnpaid: number = 0;
-    thisMonthName:any="";
-    loans:any=[];
-    showLoansGrid:boolean=false;
-    statics:any=[];
+    thisMonthName: any = "";
+    loans: any = [];
+    showLoansGrid: boolean = false;
+    statics: any = [];
+    incomes: any = [];
+    tempTotal:number=0;
     constructor(public dataStore: DataStoreService, public cookie: CookieService, public datePipe: DatePipe, public apiService: ApiService) { }
 
     ngOnInit() {
-        this.thisMonthName = this.datePipe.transform(new Date(),"MMMM");
+        this.thisMonthName = this.datePipe.transform(new Date(), "MMMM");
         this.transactionsList = this.dataStore.transferLocalStorageDataToList("transactions");
         this.categoriesList = this.dataStore.transferLocalStorageDataToList("categories");
         // this.categoryChartDetails('Sep');
         this.monthChartDetails(this.getMonthDataFromLocalStorage());
         this.monthsList = this.getMonthDataFromLocalStorage();
-        // console.log(this.dataStore.convertMonth(this.monthsList[0].monthName));
         this.updateProgress(this.datePipe.transform(new Date(), "ddMMyyyy"), this.monthsList[0] != null && this.monthsList[0] != undefined ? this.monthsList[0].totalExpenseOfTheMonth : 0);
         this.showStatics(this.getMonthDataFromLocalStorage());
+        this.getIncomeDetails();
+    }
+
+    /**
+     * Get Income Details
+     */
+    getIncomeDetails() {
+        let tempList:any=[];
+        this.incomes = [
+            // {
+            //     month:"",
+            //     names:[]
+            // }
+        ];
+
+        // console.log(this.statics)
+        this.dataStore.organiseData(this.transactionsList, "date").forEach((element: any) => {
+            // console.log(element);
+            if (this.datePipe.transform(element.date, "MMMM") == this.datePipe.transform(new Date(), "MMMM")) {
+                element.transactions.forEach((element2: any) => {
+                    if (element2.itemCategoryId=="Part Time") {
+                        tempList.push(
+                            {
+                                name:element2.itemName
+                                // salary:ele
+                            })
+                    }
+                });
+
+
+            }
+        });
+        console.log(tempList);
     }
 
     /**Get Monthly Data from Local Storage */
@@ -239,6 +273,7 @@ export class DashboardComponent {
     }
 
     globalSearchButtonClicked() {
+        this.tempTotal = 0
         this.isChartOptions = false;
         this.showGlobalFilter = !this.showGlobalFilter;
     }
@@ -261,14 +296,14 @@ export class DashboardComponent {
         this.searchedResults = this.dataStore.organiseData(filteredList, 'date');
     }
 
-    showStatics(inputDataList:any) {
+    showStatics(inputDataList: any) {
         inputDataList.forEach((e1: any) => {
             this.statics.push(
                 {
-                    monthName:e1.monthName,
-                    totalIncomeOfTheMonth:e1.totalIncomeOfTheMonth,
-                    totalExpenseOfTheMonth:e1.totalExpenseOfTheMonth,
-                    remainingOfTheMonth:(e1.totalIncomeOfTheMonth-e1.totalExpenseOfTheMonth)
+                    monthName: e1.monthName,
+                    totalIncomeOfTheMonth: e1.totalIncomeOfTheMonth,
+                    totalExpenseOfTheMonth: e1.totalExpenseOfTheMonth,
+                    remainingOfTheMonth: (e1.totalIncomeOfTheMonth - e1.totalExpenseOfTheMonth)
                 }
             )
         });
@@ -293,7 +328,7 @@ export class DashboardComponent {
     progress: any = 0;
 
     updateProgress(monthName: any, expenseOfTheMonth: any) {
-        this.progress = (expenseOfTheMonth*100)/parseInt(this.apiService.getItemFromLocal(this.datePipe.transform(new Date(), "ddMMyyyy")));
+        this.progress = (expenseOfTheMonth * 100) / parseInt(this.apiService.getItemFromLocal(this.datePipe.transform(new Date(), "ddMMyyyy")));
         if (this.progress < 100) {
             this.progress += 10; // Increase progress by 10%
             // const progressBar:any = document.getElementById('progressBar');
@@ -302,7 +337,7 @@ export class DashboardComponent {
         }
     }
 
-    getLoanDetails(){
+    getLoanDetails() {
 
     }
 

@@ -36,7 +36,7 @@ export class DataStoreService {
       let tempList: any = [];
       
       this.convertResponseToArray(this.apiService.getAllLocalStorageData()).forEach((data:any)=>{
-        console.log(data);
+        // console.log(data);
         if(data.listName != undefined && data.listName=="category"){
           tempList.push(data);
         }
@@ -46,7 +46,7 @@ export class DataStoreService {
     if (type == "transactions") {
       let tempList: any = [];
       this.convertResponseToArray(this.apiService.getAllLocalStorageData()).forEach((data:any)=>{
-        console.log(data);
+        // console.log(data);
         if(data.listName != undefined && data.listName=="transaction"){
           tempList.push(data);
         }
@@ -150,7 +150,7 @@ export class DataStoreService {
         }
 
       });
-      console.log(returnList);
+      // console.log(returnList);
       const uniqueNames = new Set<string>();
       const uniquePayments = returnList.filter((t1: any) => {
         if (!uniqueNames.has(t1.itemName) && t1.totalBorrowed - t1.totalLended != 0) {
