@@ -12,10 +12,6 @@ type Transaction = {
     cost: number;
 };
 
-type MonthlyTransactions = {
-    month: string;
-    transactions: Transaction[];
-};
 
 type ItemTotals = {
     [key: string]: number;
@@ -73,7 +69,6 @@ export class DashboardComponent {
         // this.categoryChartDetails('Sep');
         this.monthChartDetails(this.getMonthDataFromLocalStorage());
         this.monthsList = this.getMonthDataFromLocalStorage();
-        this.updateProgress(this.datePipe.transform(new Date(), "ddMMyyyy"), this.monthsList[0] != null && this.monthsList[0] != undefined ? this.monthsList[0].totalExpenseOfTheMonth : 0);
         this.showStatics(this.getMonthDataFromLocalStorage());
         this.getIncomeDetails();
     }
@@ -326,16 +321,6 @@ export class DashboardComponent {
     }
 
     progress: any = 0;
-
-    updateProgress(monthName: any, expenseOfTheMonth: any) {
-        this.progress = (expenseOfTheMonth * 100) / parseInt(this.apiService.getItemFromLocal(this.datePipe.transform(new Date(), "ddMMyyyy")));
-        if (this.progress < 100) {
-            this.progress += 10; // Increase progress by 10%
-            // const progressBar:any = document.getElementById('progressBar');
-            // progressBar.style.width = this.progress + '%';
-            // progressBar.textContent = this.progress + '%'; // Display progress percentage
-        }
-    }
 
     getLoanDetails() {
 
